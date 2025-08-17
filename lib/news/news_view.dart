@@ -5,7 +5,12 @@ import 'package:news/models/source_model.dart';
 import 'package:news/news/news_item.dart';
 import 'package:news/news/tab_item.dart';
 
-class NewsView extends StatefulWidget {
+class NewsView extends StatefulWidget { 
+
+  String categoryId; 
+
+  NewsView({required this.categoryId});
+  
   @override
   State<NewsView> createState() => _NewsViewState();
 }
