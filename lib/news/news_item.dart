@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:news/app_theme.dart';
+import 'package:news/models/news_response/News.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class NewsItem extends StatelessWidget {
+  News news;
+
+  NewsItem({required this.news});
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    final dateTime = DateTime.now().subtract(Duration(minutes: 50, days: 2));
-
+ 
     return Container(
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -18,23 +22,24 @@ class NewsItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.asset(
-              'assets/images/image.png',
+            child: Image.network(
+              news.urlToImage ??
+                  'https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3ANo_Image_Available.jpg&psig=AOvVaw28WXd06S2HWvPF5tVkcqO3&ust=1755892673763000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIjH05vYnI8DFQAAAAAdAAAAABAL',
               height: MediaQuery.sizeOf(context).height * .25,
               width: double.infinity,
               fit: BoxFit.fill,
             ),
           ),
           SizedBox(height: 10),
-          Text(
-            '40-year-old man falls 200 feet to his death while canyoneering at national park',
-            style: textTheme.titleMedium,
-          ),
+          Text(news.title!, style: textTheme.titleMedium),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('By : Jon Haworth', style: textTheme.labelSmall),
-              Text(timeago.format(dateTime), style: textTheme.labelSmall),
+              Text('By : ${news.source!.name}', style: textTheme.labelSmall),
+              Text(
+                timeago.format(news.publishedAt!),
+                style: textTheme.labelSmall,
+              ),
             ],
           ),
         ],

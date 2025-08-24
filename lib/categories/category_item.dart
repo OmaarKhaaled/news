@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:news/models/categry_model.dart';
 
 class CategoryItem extends StatelessWidget {
-CategryModel categry ;
+  CategryModel categry;
 
-CategoryItem({required this.categry}) ;
+  CategoryItem({required this.categry});
 
   @override
   Widget build(BuildContext context) {

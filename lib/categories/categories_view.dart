@@ -3,7 +3,6 @@ import 'package:news/categories/category_item.dart';
 import 'package:news/models/categry_model.dart';
 
 class CategoriesView extends StatelessWidget {
-
   CategoriesView({required this.onCategorySelected});
 
   void Function(CategryModel) onCategorySelected;

@@ -26,7 +26,7 @@ class AppTheme {
         fontWeight: FontWeight.w500,
       ),
 
-      labelLarge:  TextStyle(
+      labelLarge: TextStyle(
         fontSize: 20,
         color: white,
         fontWeight: FontWeight.w500,
@@ -47,8 +47,8 @@ class AppTheme {
       labelSmall: TextStyle(
         fontSize: 12,
         color: gray,
-        fontWeight: FontWeight.w500
-      )
+        fontWeight: FontWeight.w500,
+      ),
     ),
   );
 }
