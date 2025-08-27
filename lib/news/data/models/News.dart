@@ -1,4 +1,4 @@
-import 'source.dart';
+import 'soource.dart';
 
 class News {
   Source? source;
