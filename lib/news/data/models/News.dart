@@ -1,4 +1,4 @@
-import 'soource.dart';
+import 'package:news/sources/data/models/source.dart';
 
 class News {
   Source? source;
