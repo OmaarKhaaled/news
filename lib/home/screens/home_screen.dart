@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:news/home/screens/search_screen.dart';
 import 'package:news/home/widgets/home_drawer.dart';
 import 'package:news/categories/view/widgets/categories_view.dart';
 import 'package:news/models/categry_model.dart';
@@ -13,11 +15,29 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   CategryModel? selectedCategory;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedCategory == null ? 'Home' : selectedCategory!.name),
+        actions: [
+          InkWell(
+            onTap: () => Navigator.pushNamed(
+              context,
+              SearchScreen.routeName,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: SvgPicture.asset(
+                'assets/icons/search.svg',
+                width: 18,
+                height: 18,
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+        ],
       ),
       drawer: HomeDrawer(onGpToHomeClicked: resetSelectedCategory),
       body: selectedCategory == null
