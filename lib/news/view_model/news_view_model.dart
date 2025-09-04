@@ -1,9 +1,13 @@
 import 'package:flutter/widgets.dart';
-import 'package:news/news/data/data_sources/news_data_source.dart';
 import 'package:news/news/data/models/News.dart';
+import 'package:news/news/data/repositories/news_repository.dart';
+import 'package:news/shared/widgets/service_locator.dart';
 
 class NewsViewModel with ChangeNotifier {
-  NewsDataSource newsDataSource = NewsDataSource();
+  late NewsRepository repository;
+  NewsViewModel() {
+    repository = NewsRepository(dataSource: ServiceLocator.newsDataSource);
+  }
 
   List<News> allNews = [];
   List<News> filteredNews = [];
@@ -18,7 +22,7 @@ class NewsViewModel with ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      allNews = await newsDataSource.getNews(sourceId);
+      allNews = await repository.getNews(sourceId);
       filteredNews = allNews;
     } catch (error) {
       errorMessage = error.toString();
@@ -28,11 +32,11 @@ class NewsViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAllNews() async {
+  Future<List<News>> getAllNews() async {
     isLoading = true;
     notifyListeners();
     try {
-      allNews = await newsDataSource.getAllNews();
+      allNews = await repository.getAllNews();
 
       filteredNews = allNews;
     } catch (error) {
@@ -41,6 +45,7 @@ class NewsViewModel with ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
+    return allNews;
   }
 
   void filterNews(String query) {
@@ -62,5 +67,4 @@ class NewsViewModel with ChangeNotifier {
     }
     notifyListeners();
   }
-
 }
