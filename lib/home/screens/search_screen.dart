@@ -67,11 +67,17 @@ class _SearchScreenState extends State<SearchScreen> {
                     searchController.clear();
                     context.read<NewsViewModel>().filterNews('');
                   },
-                  child: SvgPicture.asset(
-                    'assets/icons/cancel.svg',
-                    width: 18,
-                    height: 18,
-                    fit: BoxFit.scaleDown,
+                  child: GestureDetector(
+                    onTap: () {
+                      searchController.text = '';
+                      Navigator.of(context).pop();
+                    },
+                    child: SvgPicture.asset(
+                      'assets/icons/cancel.svg',
+                      width: 18,
+                      height: 18,
+                      fit: BoxFit.scaleDown,
+                    ),
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
