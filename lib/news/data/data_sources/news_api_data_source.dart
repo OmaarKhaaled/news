@@ -22,6 +22,7 @@ class NewsApiDataSource implements NewsDataSource{
     }
   }
 
+  @override
   Future<List<News>> getAllNews() async {
     Uri uri = Uri.https(ApiConstans.baseUrl, ApiConstans.newsEndPoint, {
       'apiKey': ApiConstans.apiKey,

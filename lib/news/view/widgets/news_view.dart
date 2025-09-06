@@ -10,6 +10,7 @@ import 'package:news/sources/view_model/sources_view_model.dart';
 import 'package:news/shared/widgets/error_indicator.dart';
 import 'package:news/shared/widgets/loading_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsView extends StatefulWidget {
   String categoryId;

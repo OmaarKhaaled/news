@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:news/shared/widgets/service_locator.dart';
-import 'package:news/sources/data/data_sources/sources_api_data_source.dart';
 import 'package:news/sources/data/models/source.dart';
 import 'package:news/sources/data/repositories/sources_repository.dart';
 

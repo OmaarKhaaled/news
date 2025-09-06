@@ -11,7 +11,7 @@ class NewsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
- 
+
     return Container(
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -23,11 +23,18 @@ class NewsItem extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Image.network(
-              news.urlToImage ??
-                  'https://www.google.com/url?sa=i&url=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3ANo_Image_Available.jpg&psig=AOvVaw28WXd06S2HWvPF5tVkcqO3&ust=1755892673763000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIjH05vYnI8DFQAAAAAdAAAAABAL',
+              news.urlToImage ?? 'url',
               height: MediaQuery.sizeOf(context).height * .25,
               width: double.infinity,
               fit: BoxFit.fill,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.network(
+                  'https://static.vecteezy.com/system/resources/thumbnails/004/141/669/small_2x/no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-illustration-vector.jpg',
+                  height: MediaQuery.sizeOf(context).height * .25,
+                  width: double.infinity,
+                  fit: BoxFit.fill,
+                );
+              },
             ),
           ),
           SizedBox(height: 10),
