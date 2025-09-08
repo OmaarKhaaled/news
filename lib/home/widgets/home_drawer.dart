@@ -3,9 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:news/shared/constants/app_theme.dart';
 
 class HomeDrawer extends StatelessWidget {
-  VoidCallback onGpToHomeClicked;
+  VoidCallback onGoToHomeClicked;
 
-  HomeDrawer({required this.onGpToHomeClicked});
+  HomeDrawer({required this.onGoToHomeClicked});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class HomeDrawer extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: InkWell(
               onTap: () {
-                onGpToHomeClicked();
+                onGoToHomeClicked();
                 Navigator.of(context).pop();
               },
               child: Row(

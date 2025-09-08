@@ -4,5 +4,4 @@ abstract class NewsDataSource {
   Future<List<News>> getNews(String sourceId);
 
   Future<List<News>> getAllNews();
-
 }
