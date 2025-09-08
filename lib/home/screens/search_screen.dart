@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:news/news/view/widgets/news_item.dart';
+import 'package:news/news/view_model/news_state.dart';
 import 'package:news/news/view_model/news_view_model.dart';
 import 'package:news/shared/constants/app_theme.dart';
 import 'package:news/shared/widgets/details.dart';
 import 'package:news/shared/widgets/error_indicator.dart';
 import 'package:news/shared/widgets/loading_indicator.dart';
-import 'package:provider/provider.dart';
+import 'package:news/sources/view_model/sources_state.dart';
 
 class SearchScreen extends StatefulWidget {
   static const routeName = '/search';
@@ -95,31 +97,36 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           Expanded(
-            child: Consumer<NewsViewModel>(
-              builder: (_, viewModel, __) {
-                if (viewModel.isLoading) {
+            child: BlocBuilder<NewsViewModel, NewsState>(
+              builder: (context, state) {
+                if (state is GetSourcesLoading) {
                   return LoadingIndicator();
-                } else if (viewModel.errorMessage != null) {
-                  return ErrorIndicator(errorMessage: viewModel.errorMessage!);
-                } else if (viewModel.news.isEmpty) {
-                  return Center(
+                } else if (state is GetNewsError) {
+                  return ErrorIndicator(errorMessage: state.message);
+                } else if (state is GetNewsSuccess) {
+                  if (state.news.isEmpty) {
+                     return Center(
                     child: Text(
-                      viewModel.currentQuery.isEmpty
+                      state.currentQuery.isEmpty
                           ? 'Start typing to search for news'
                           : 'No results found',
                       style: TextStyle(color: AppTheme.white, fontSize: 18),
                     ),
                   );
-                } else {
+                  }
+                  else {
                   return ListView.separated(
                     padding: EdgeInsets.only(top: 16, right: 16, left: 16),
-                    itemCount: viewModel.news.length,
+                    itemCount: state.news.length,
                     itemBuilder: (_, index) => InkWell(
-                      child: NewsItem(news: viewModel.news[index]),
-                      onTap: () => showDetails(context, viewModel.news[index]),
+                      child: NewsItem(news: state.news[index]),
+                      onTap: () => showDetails(context, state.news[index]),
                     ),
                     separatorBuilder: (_, __) => SizedBox(height: 16),
                   );
+                }
+                } else {
+                  return SizedBox();
                 }
               },
             ),

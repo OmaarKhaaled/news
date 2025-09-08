@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news/news/view_model/news_state.dart';
 import 'package:news/shared/constants/app_theme.dart';
 import 'package:news/news/data/models/News.dart';
 import 'package:news/news/view_model/news_view_model.dart';
@@ -6,11 +8,10 @@ import 'package:news/shared/widgets/details.dart';
 import 'package:news/sources/data/models/source.dart';
 import 'package:news/news/view/widgets/news_item.dart';
 import 'package:news/sources/data/models/widgets/tab_item.dart';
+import 'package:news/sources/view_model/sources_state.dart';
 import 'package:news/sources/view_model/sources_view_model.dart';
 import 'package:news/shared/widgets/error_indicator.dart';
 import 'package:news/shared/widgets/loading_indicator.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NewsView extends StatefulWidget {
   String categoryId;
@@ -29,25 +30,28 @@ class _NewsViewState extends State<NewsView> {
   @override
   void initState() {
     super.initState();
-    sourcesViewModel.getSources(widget.categoryId).then((_) {
-      if (sourcesViewModel.sources.isNotEmpty) {
-        newsViewModel.getNews(sourcesViewModel.sources[0].id!);
+    sourcesViewModel.getSources(widget.categoryId);
+    sourcesViewModel.stream.listen((state) {
+      if (state is GetSourcesSuccess) {
+        if (state.sources.isNotEmpty) {
+          newsViewModel.getNews(state.sources[0].id!);
+        }
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return BlocProvider(
       create: (_) => sourcesViewModel,
-      child: Consumer<SourcesViewModel>(
-        builder: (_, viewModel, _) {
-          if (viewModel.isLoading) {
+      child: BlocBuilder<SourcesViewModel, SourcesState>(
+        builder: (context, state) {
+          if (state is GetSourcesLoading) {
             return LoadingIndicator();
-          } else if (viewModel.errorMessage != null) {
-            return ErrorIndicator(errorMessage: viewModel.errorMessage!);
-          } else {
-            List<Source> sources = viewModel.sources;
+          } else if (state is GetSourcesError) {
+            return ErrorIndicator(errorMessage: state.message);
+          } else if (state is GetSourcesSuccess) {
+            List<Source> sources = state.sources;
             return Column(
               children: [
                 DefaultTabController(
@@ -77,18 +81,16 @@ class _NewsViewState extends State<NewsView> {
                   ),
                 ),
                 Expanded(
-                  child: ChangeNotifierProvider.value(
+                  child: BlocProvider.value(
                     value: newsViewModel,
-                    child: Consumer<NewsViewModel>(
-                      builder: (_, viewModel, _) {
-                        if (viewModel.isLoading) {
+                    child: BlocBuilder<NewsViewModel, NewsState>(
+                      builder: (_, state) {
+                        if (state is GetNewsLoading) {
                           return LoadingIndicator();
-                        } else if (viewModel.errorMessage != null) {
-                          return ErrorIndicator(
-                            errorMessage: viewModel.errorMessage!,
-                          );
-                        } else {
-                          List<News> news = viewModel.news;
+                        } else if (state is GetNewsError) {
+                          return ErrorIndicator(errorMessage: state.message);
+                        } else if (state is GetNewsSuccess) {
+                          List<News> news = state.news;
                           return ListView.separated(
                             padding: EdgeInsets.only(
                               top: 16,
@@ -102,6 +104,8 @@ class _NewsViewState extends State<NewsView> {
                             separatorBuilder: (_, _) => SizedBox(height: 16),
                             itemCount: news.length,
                           );
+                        } else {
+                          return SizedBox();
                         }
                       },
                     ),
@@ -109,6 +113,8 @@ class _NewsViewState extends State<NewsView> {
                 ),
               ],
             );
+          } else {
+            return SizedBox();
           }
         },
       ),
