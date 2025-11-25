@@ -6,7 +6,7 @@ import 'package:timeago/timeago.dart' as timeago;
 class NewsItem extends StatelessWidget {
   News news;
 
-  NewsItem({required this.news});
+  NewsItem({super.key, required this.news});
 
   @override
   Widget build(BuildContext context) {

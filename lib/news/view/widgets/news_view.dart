@@ -14,9 +14,9 @@ import 'package:news/shared/widgets/error_indicator.dart';
 import 'package:news/shared/widgets/loading_indicator.dart';
 
 class NewsView extends StatefulWidget {
-  String categoryId;
+  final String categoryId;
 
-  NewsView({required this.categoryId});
+  const NewsView({super.key, required this.categoryId});
 
   @override
   State<NewsView> createState() => _NewsViewState();
@@ -36,18 +36,22 @@ class _NewsViewState extends State<NewsView> {
     return BlocListener<SourcesViewModel, SourcesState>(
       listener: (context, state) {
         if (state is GetSourcesSuccess && state.sources.isNotEmpty) {
-          final firstSource = state.sources.first;
-          context.read<NewsViewModel>().getNews(firstSource.id!);
+          context.read<NewsViewModel>().getNews(state.sources.first.id!);
         }
       },
       child: BlocBuilder<SourcesViewModel, SourcesState>(
         builder: (context, state) {
           if (state is GetSourcesLoading) {
             return LoadingIndicator();
-          } else if (state is GetSourcesError) {
+          }
+
+          if (state is GetSourcesError) {
             return ErrorIndicator(errorMessage: state.message);
-          } else if (state is GetSourcesSuccess) {
-            List<Source> sources = state.sources;
+          }
+
+          if (state is GetSourcesSuccess) {
+            final List<Source> sources = state.sources;
+
             return Column(
               children: [
                 DefaultTabController(
@@ -56,7 +60,8 @@ class _NewsViewState extends State<NewsView> {
                     tabs: sources
                         .map(
                           (source) => TabItem(
-                            isSelected: currentIndex == sources.indexOf(source),
+                            isSelected:
+                                currentIndex == sources.indexOf(source),
                             source: source,
                           ),
                         )
@@ -69,46 +74,51 @@ class _NewsViewState extends State<NewsView> {
                     tabAlignment: TabAlignment.start,
                     onTap: (index) {
                       if (currentIndex == index) return;
-                      setState(() {
-                        currentIndex = index;
-                      });
-                      context.read<NewsViewModel>().getNews(sources[index].id!);
+                      setState(() => currentIndex = index);
+                      context
+                          .read<NewsViewModel>()
+                          .getNews(sources[index].id!);
                     },
                   ),
                 ),
+
                 Expanded(
                   child: BlocBuilder<NewsViewModel, NewsState>(
-                    builder: (_, state) {
-                      if (state is GetNewsLoading) {
+                    builder: (_, newsState) {
+                      if (newsState is GetNewsLoading) {
                         return LoadingIndicator();
-                      } else if (state is GetNewsError) {
-                        return ErrorIndicator(errorMessage: state.message);
-                      } else if (state is GetNewsSuccess) {
-                        List<News> news = state.news;
+                      }
+
+                      if (newsState is GetNewsError) {
+                        return ErrorIndicator(
+                            errorMessage: newsState.message);
+                      }
+
+                      if (newsState is GetNewsSuccess) {
+                        final List<News> news = newsState.news;
+
                         return ListView.separated(
-                          padding: EdgeInsets.only(
-                            top: 16,
-                            right: 16,
-                            left: 16,
-                          ),
+                          padding: EdgeInsets.all(16),
                           itemBuilder: (_, index) => InkWell(
                             child: NewsItem(news: news[index]),
-                            onTap: () => showDetails(context, news[index]),
+                            onTap: () =>
+                                showDetails(context, news[index]),
                           ),
-                          separatorBuilder: (_, _) => SizedBox(height: 16),
+                          separatorBuilder: (_, __) =>
+                              SizedBox(height: 16),
                           itemCount: news.length,
                         );
-                      } else {
-                        return SizedBox();
                       }
+
+                      return SizedBox();
                     },
                   ),
                 ),
               ],
             );
-          } else {
-            return SizedBox();
           }
+
+          return SizedBox();
         },
       ),
     );

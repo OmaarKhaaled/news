@@ -5,7 +5,7 @@ import 'package:news/shared/constants/app_theme.dart';
 class HomeDrawer extends StatelessWidget {
   VoidCallback onGoToHomeClicked;
 
-  HomeDrawer({required this.onGoToHomeClicked});
+  HomeDrawer({super.key, required this.onGoToHomeClicked});
 
   @override
   Widget build(BuildContext context) {

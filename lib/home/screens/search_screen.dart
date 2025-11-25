@@ -13,6 +13,8 @@ import 'package:news/sources/view_model/sources_state.dart';
 class SearchScreen extends StatefulWidget {
   static const routeName = '/search';
 
+  const SearchScreen({super.key});
+
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }

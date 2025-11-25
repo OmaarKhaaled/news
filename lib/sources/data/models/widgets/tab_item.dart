@@ -5,7 +5,7 @@ class TabItem extends StatelessWidget {
   Source source;
   bool isSelected;
 
-  TabItem({required this.isSelected, required this.source});
+  TabItem({super.key, required this.isSelected, required this.source});
 
   @override
   Widget build(BuildContext context) {

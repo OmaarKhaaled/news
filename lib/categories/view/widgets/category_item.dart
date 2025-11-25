@@ -4,7 +4,7 @@ import 'package:news/models/categry_model.dart';
 class CategoryItem extends StatelessWidget {
   CategryModel categry;
 
-  CategoryItem({required this.categry});
+  CategoryItem({super.key, required this.categry});
 
   @override
   Widget build(BuildContext context) {
